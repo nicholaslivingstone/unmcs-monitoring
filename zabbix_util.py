@@ -15,24 +15,37 @@ class ZabbixLogin():
 
         # Initialize Data
         self.api_data = None
-
-    def get_api_data(self, group_id):
-        hosts = list()
-
-        raw_host_data = self.login_instance.host.get(output='extend', groupids=group_id)
-
-        for host in raw_host_data:
-            name = host['host']
-            cpu_util = self.login_instance.item.get(hostids=host['hostid'], tags=[{"tag": "API"}])[0]['lastvalue']
-            cpu_util = round(float(cpu_util), 2)
-
-            host_dict = {
-                'name': name,
-                'cpu_util': cpu_util
+        self.groups = [
+            {
+                "group_name": "B146",
+                "group_id": os.getenv("B146_GROUPID")
+            },
+            {
+                "group_name": "B146",
+                "group_id": os.getenv("FE2065_GROUPID")
             }
+        ]
 
-            hosts.append(host_dict)
+    def get_api_data(self):
+        self.api_data = list()
 
-        self.api_data = sorted(hosts, key=lambda i: i['name'])
+        for g in self.groups:
+            group_data = list()
+
+            raw_host_data = self.login_instance.host.get(output='extend', groupids=g['group_id'])
+
+            for host in raw_host_data:
+                name = host['host']
+                cpu_util = self.login_instance.item.get(hostids=host['hostid'], tags=[{"tag": "API"}])[0]['lastvalue']
+                cpu_util = round(float(cpu_util), 2)
+
+                host_dict = {
+                    'name': name,
+                    'cpu_util': cpu_util
+                }
+
+                group_data.append(host_dict)
+
+            self.api_data.append(sorted(group_data, key=lambda i: i['name']))
 
 
