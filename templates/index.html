@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+CS Machines
+{% endblock %}
+
+
+{% block body %}
+<h1> UNM CS Machines</h1>
+    <div id="tester" style="width: 1000px;height:1000px;position:absolute;"></div>
+
+    <script>
+        const hosts = {{ hostData|tojson }};
+        TESTER = document.getElementById('tester');
+
+        var i = 0, zValues = [];
+
+        for (i = 0; i < hosts.length; i++){
+            if(i % 7 === 0){
+                zValues.push([]);
+            }
+
+            zValues[Math.floor(i/7)].push(hosts[i].cpu_util);
+        }
+
+
+        var colorscaleValue = [
+            ['0.0', '#08a400'],
+            ['0.2', '#ffd500'],
+           ['1', '#ff0000']
+        ];
+
+        var data = [{
+            z: zValues,
+            type: 'heatmap',
+            colorscale: colorscaleValue,
+            showscale: false,
+            hoverongaps: false,
+            zmin: 0.0,
+            zmax: 100
+        }];
+
+        var layout = {
+            title: 'B146 CPU Utilization',
+            annotations: [],
+            xaxis:{
+                'range': [0.5, 6.5],
+                'showgrid': false,
+                'zeroline': false,
+                'visible': false
+            },
+            yaxis:{
+                'range': [0.5, 9.5],
+                'showgrid': false,
+                'zeroline': false,
+                'visible': false
+            }
+        };
+
+
+        for (var i = 0; i < 7; i++) {
+            for (var j = 0; j < 10; j++) {
+
+                var ann_text = ""
+
+                if(j * 7 + i < hosts.length){
+                    ann_text = "<b>" + hosts[j * 7 + i].name + "</b><br>" + hosts[j * 7 + i].cpu_util + "%";
+                }
+
+                var result = {
+                    x: i,
+                    y: j,
+                    text: ann_text,
+                    font: {
+                        family: 'Arial',
+                        size: 12,
+                        color:'white'
+                    },
+
+                    showarrow: false,
+
+                };
+                layout.annotations.push(result);
+            }
+        }
+
+
+        Plotly.newPlot(TESTER, data, layout, {staticPlot: true});
+    </script>
+
+{% endblock %}

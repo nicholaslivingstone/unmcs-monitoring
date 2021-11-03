@@ -1,0 +1,16 @@
+.terra {color:#c05131;}
+.sandia {color:#ed8b00;}
+.dusk {color:#8a387c;}
+.chile {color:#a8aa19;}
+.white {color:#ffffff;}
+.cherry {color:#ba0c2f;}
+.gray {color:#63666a;}
+.silver {color:#a7a8aa;}
+.noon {color:#ffc600;}
+.turquoise {color:#007a86;}
+h1 {
+    border: 2px #eee solid;
+    color: gray;
+    text-align: center;
+    padding: 10px;
+}
