@@ -21,7 +21,7 @@ class ZabbixLogin():
                 "group_id": os.getenv("B146_GROUPID")
             },
             {
-                "group_name": "B146",
+                "group_name": "FE2065",
                 "group_id": os.getenv("FE2065_GROUPID")
             }
         ]
