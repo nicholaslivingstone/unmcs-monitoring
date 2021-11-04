@@ -8,22 +8,20 @@ CS Machines
 
 {% block body %}
 <h1> UNM CS Machines</h1>
+    <h5> This data is updated every 5 minutes </h5>
     <div id="tester" style="width: 1000px;height:1000px;position:absolute;"></div>
 
     <script>
         const hosts = {{ hostData|tojson }};
+        const gridWidth = 7;
+        const gridHeight = Math.ceil(hosts.length / gridWidth);
         TESTER = document.getElementById('tester');
 
         var i = 0, zValues = [];
-
-        for (i = 0; i < hosts.length; i++){
-            if(i % 7 === 0){
-                zValues.push([]);
-            }
-
-            zValues[Math.floor(i/7)].push(hosts[i].cpu_util);
+        const item_data = hosts.map((h) => h['cpu_util'])
+        for(i = 0; i < gridHeight; i++){
+           zValues.push(item_data.splice(0,gridWidth));
         }
-
 
         var colorscaleValue = [
             ['0.0', '#08a400'],
@@ -45,13 +43,13 @@ CS Machines
             title: 'B146 CPU Utilization',
             annotations: [],
             xaxis:{
-                'range': [0.5, 6.5],
+                'range': [-0.5, gridWidth - 0.5],
                 'showgrid': false,
                 'zeroline': false,
                 'visible': false
             },
             yaxis:{
-                'range': [0.5, 9.5],
+                'range': [-0.5, gridHeight - 0.5],
                 'showgrid': false,
                 'zeroline': false,
                 'visible': false
@@ -59,8 +57,8 @@ CS Machines
         };
 
 
-        for (var i = 0; i < 7; i++) {
-            for (var j = 0; j < 10; j++) {
+        for (var i = 0; i < gridWidth; i++) {
+            for (var j = 0; j < gridHeight; j++) {
 
                 var ann_text = ""
 
