@@ -1,17 +1,15 @@
-import logging
 import os
-import time
-from threading import Thread
 
 from pyzabbix import ZabbixAPI
 
 
 class ZabbixLogin():
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         # Login and Connect to Zabbix API
         self.login_instance = ZabbixAPI(os.getenv('ZABBIX_API'))
         self.login_instance.login(api_token=os.getenv('API_TOKEN'))
-        print("Connected to Zabbix API Version %s" % self.login_instance.api_version())
+        self.app.logger.info("Connected to Zabbix API Version %s" % self.login_instance.api_version())
 
         # Initialize Data
         self.api_data = None
@@ -27,7 +25,8 @@ class ZabbixLogin():
         ]
 
     def get_api_data(self):
-        self.api_data = list()
+        self.app.logger.info("Getting Latest data from Zabbix")
+        new_api_data = list()
 
         for g in self.groups:
             group_data = list()
@@ -46,6 +45,6 @@ class ZabbixLogin():
 
                 group_data.append(host_dict)
 
-            self.api_data.append(sorted(group_data, key=lambda i: i['name']))
+            new_api_data.append(sorted(group_data, key=lambda i: i['name']))
 
-
+        self.api_data = new_api_data
