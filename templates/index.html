@@ -9,82 +9,87 @@ CS Machines
 {% block body %}
 <h1> UNM CS Machines</h1>
     <h5> This data is updated every 5 minutes </h5>
-    <div id="tester" style="width: 1000px;height:1000px;position:absolute;"></div>
+    <div id="B146Grid" style="width: 1000px;height:1000px;position:absolute;"></div>
 
     <script>
-        const hosts = {{ hostData|tojson }};
-        const gridWidth = 7;
-        const gridHeight = Math.ceil(hosts.length / gridWidth);
-        TESTER = document.getElementById('tester');
+        const hosts = {{ APIData |tojson }};
 
-        var i = 0, zValues = [];
-        const item_data = hosts.map((h) => h['cpu_util'])
-        for(i = 0; i < gridHeight; i++){
-           zValues.push(item_data.splice(0,gridWidth));
-        }
+        renderHeatmap(document.getElementById('B146Grid'), 7, 'cpu_util');
 
-        var colorscaleValue = [
-            ['0.0', '#08a400'],
-            ['0.2', '#ffd500'],
-           ['1', '#ff0000']
-        ];
+        function renderHeatmap(element, gridWidth, itemName){
 
-        var data = [{
-            z: zValues,
-            type: 'heatmap',
-            colorscale: colorscaleValue,
-            showscale: false,
-            hoverongaps: false,
-            zmin: 0.0,
-            zmax: 100
-        }];
+            const gridHeight = Math.ceil(hosts.length / gridWidth);
 
-        var layout = {
-            title: 'B146 CPU Utilization',
-            annotations: [],
-            xaxis:{
-                'range': [-0.5, gridWidth - 0.5],
-                'showgrid': false,
-                'zeroline': false,
-                'visible': false
-            },
-            yaxis:{
-                'range': [-0.5, gridHeight - 0.5],
-                'showgrid': false,
-                'zeroline': false,
-                'visible': false
+            var i = 0, zValues = [];
+            const item_data = hosts.map((h) => h[itemName])
+            for(i = 0; i < gridHeight; i++){
+                zValues.push(item_data.splice(0,gridWidth));
             }
-        };
 
+            var colorscaleValue = [
+                ['0.0', '#08a400'],
+                ['0.2', '#ffd500'],
+                ['1', '#ff0000']
+            ];
 
-        for (var i = 0; i < gridWidth; i++) {
-            for (var j = 0; j < gridHeight; j++) {
+            var data = [{
+                z: zValues,
+                type: 'heatmap',
+                colorscale: colorscaleValue,
+                showscale: false,
+                hoverongaps: false,
+                zmin: 0.0,
+                zmax: 100
+            }];
 
-                var ann_text = ""
-
-                if(j * 7 + i < hosts.length){
-                    ann_text = "<b>" + hosts[j * 7 + i].name + "</b><br>" + hosts[j * 7 + i].cpu_util + "%";
+            var layout = {
+                title: 'B146 CPU Utilization',
+                annotations: [],
+                xaxis:{
+                    'range': [-0.5, gridWidth - 0.5],
+                    'showgrid': false,
+                    'zeroline': false,
+                    'visible': false
+                },
+                yaxis:{
+                    'range': [-0.5, gridHeight - 0.5],
+                    'showgrid': false,
+                    'zeroline': false,
+                    'visible': false
                 }
+            };
 
-                var result = {
-                    x: i,
-                    y: j,
-                    text: ann_text,
-                    font: {
-                        family: 'Arial',
-                        size: 12,
-                        color:'white'
-                    },
 
-                    showarrow: false,
+            for (var i = 0; i < gridWidth; i++) {
+                for (var j = 0; j < gridHeight; j++) {
 
-                };
-                layout.annotations.push(result);
+                    var ann_text = ""
+
+                    if(j * 7 + i < hosts.length){
+                        ann_text = "<b>" + hosts[j * 7 + i].name + "</b><br>" + hosts[j * 7 + i].cpu_util + "%";
+                    }
+
+                    var result = {
+                        x: i,
+                        y: j,
+                        text: ann_text,
+                        font: {
+                            family: 'Arial',
+                            size: 12,
+                            color:'white'
+                        },
+
+                        showarrow: false,
+
+                    };
+                    layout.annotations.push(result);
+                }
             }
+
+            Plotly.newPlot(element, data, layout, {staticPlot: true});
         }
 
 
-        Plotly.newPlot(TESTER, data, layout, {staticPlot: true});
     </script>
 
 {% endblock %}
