@@ -9,19 +9,26 @@ CS Machines
 {% block body %}
 <h1> UNM CS Machines</h1>
     <h5> This data is updated every 5 minutes </h5>
-    <div id="B146Grid" style="width: 1000px;height:1000px;position:absolute;"></div>
+
+    <div class="flex-container">
+        <div id="B146Grid" style="width: 1000px;height:1200px;"></div>
+        <div id="FE2065Grid" style="width: 1000px;height:1000px;"></div>
+    </div>
+
+
 
     <script>
         const hosts = {{ APIData |tojson }};
 
-        renderHeatmap(document.getElementById('B146Grid'), 7, 'cpu_util');
+        renderHeatmap(document.getElementById('B146Grid'), 6, 'B146','cpu_util');
+        renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'cpu_util');
 
-        function renderHeatmap(element, gridWidth, itemName){
-
-            const gridHeight = Math.ceil(hosts.length / gridWidth);
+        function renderHeatmap(element, gridWidth, groupName, itemName){
+            groupData = hosts[groupName]
+            const gridHeight = Math.ceil(groupData.length / gridWidth);
 
             var i = 0, zValues = [];
-            const item_data = hosts.map((h) => h[itemName])
+            const item_data = groupData.map((h) => h[itemName])
             for(i = 0; i < gridHeight; i++){
                 zValues.push(item_data.splice(0,gridWidth));
             }
@@ -43,7 +50,7 @@ CS Machines
             }];
 
             var layout = {
-                title: 'B146 CPU Utilization',
+                title: groupName + ' CPU Utilization',
                 annotations: [],
                 xaxis:{
                     'range': [-0.5, gridWidth - 0.5],
@@ -65,8 +72,8 @@ CS Machines
 
                     var ann_text = ""
 
-                    if(j * 7 + i < hosts.length){
-                        ann_text = "<b>" + hosts[j * 7 + i].name + "</b><br>" + hosts[j * 7 + i].cpu_util + "%";
+                    if(j * gridWidth + i < groupData.length){
+                        ann_text = "<b>" + groupData[j * gridWidth + i].name + "</b><br>" + groupData[j * gridWidth + i].cpu_util + "%";
                     }
 
                     var result = {

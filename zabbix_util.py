@@ -26,7 +26,7 @@ class ZabbixLogin():
 
     def get_api_data(self):
         self.app.logger.info("Getting Latest data from Zabbix")
-        new_api_data = list()
+        new_api_data = {}
 
         for g in self.groups:
             group_data = list()
@@ -45,6 +45,6 @@ class ZabbixLogin():
 
                 group_data.append(host_dict)
 
-            new_api_data.append(sorted(group_data, key=lambda i: i['name']))
+            new_api_data[g['group_name']] = sorted(group_data, key=lambda i: i['name'])
 
         self.api_data = new_api_data

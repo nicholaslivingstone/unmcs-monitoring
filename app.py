@@ -12,7 +12,7 @@ flog.default_handler.setFormatter(logging.Formatter("%(asctime)s: %(message)s"))
 
 @app.route('/')
 def hello_world():
-    return render_template('index.html', APIData=zapi.api_data[0])
+    return render_template('index.html', APIData=zapi.api_data)
 
 
 class RepeatTimer(Timer):
