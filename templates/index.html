@@ -20,8 +20,8 @@ CS Machines
     <script>
         const hosts = {{ APIData |tojson }};
 
-        renderHeatmap(document.getElementById('B146Grid'), 6, 'B146','cpu_util');
-        renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'cpu_util');
+        renderHeatmap(document.getElementById('B146Grid'), 6, 'B146','CPU utilization');
+        renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'CPU utilization');
 
         function renderHeatmap(element, gridWidth, groupName, itemName){
             groupData = hosts[groupName]
@@ -73,7 +73,7 @@ CS Machines
                     var ann_text = ""
 
                     if(j * gridWidth + i < groupData.length){
-                        ann_text = "<b>" + groupData[j * gridWidth + i].name + "</b><br>" + groupData[j * gridWidth + i].cpu_util + "%";
+                        ann_text = "<b>" + groupData[j * gridWidth + i].name + "</b><br>" + groupData[j * gridWidth + i][itemName] + "%";
                     }
 
                     var result = {
