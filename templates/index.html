@@ -10,6 +10,34 @@ CS Machines
 <h1> UNM CS Machines</h1>
     <h5> This data is updated every 5 minutes </h5>
 
+    <script>
+        /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("groupDdcontent").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
+    <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn" id="groupDropdown">Dropdown</button>
+        <div id="groupDdcontent" class="dropdown-content">
+        </div>
+    </div>
+
     <div class="flex-container">
         <div id="B146Grid" style="width: 1000px;height:1200px;"></div>
         <div id="FE2065Grid" style="width: 1000px;height:1000px;"></div>
@@ -20,10 +48,25 @@ CS Machines
     <script>
         const hosts = {{ APIData |tojson }};
 
+        dropDown = document.getElementById("groupDdcontent");
+        Object.keys(hosts).forEach(function(groupName, index){
+            var node = document.createElement('a');
+            var linkText = document.createTextNode(groupName);
+            node.appendChild(linkText);
+            node.onclick = function () {setGroup(groupName)};
+            dropDown.appendChild(node);
+        });
+
+
         renderHeatmap(document.getElementById('B146Grid'), 6, 'B146','CPU utilization');
         renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'CPU utilization');
 
+        function setGroup(group){
+            document.querySelector("#groupDropdown").textContent = group;
+        }
+
         function renderHeatmap(element, gridWidth, groupName, itemName){
+
             groupData = hosts[groupName]
             const gridHeight = Math.ceil(groupData.length / gridWidth);
 
