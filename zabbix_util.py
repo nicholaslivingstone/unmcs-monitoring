@@ -26,7 +26,7 @@ class ZabbixLogin():
 
     def get_api_data(self):
         self.app.logger.info("Getting Latest data from Zabbix")
-        new_api_data = list()
+        new_api_data = {}
 
         for g in self.groups:
             group_data = list()
@@ -34,17 +34,20 @@ class ZabbixLogin():
             raw_host_data = self.login_instance.host.get(output='extend', groupids=g['group_id'])
 
             for host in raw_host_data:
-                name = host['host']
-                cpu_util = self.login_instance.item.get(hostids=host['hostid'], tags=[{"tag": "API"}])[0]['lastvalue']
-                cpu_util = round(float(cpu_util), 2)
+                host_dict = {'name': host['host']}  # Save the name of the host
 
-                host_dict = {
-                    'name': name,
-                    'cpu_util': cpu_util
-                }
+                # Get all the data for each item in the host with "API" tag
+                host_data = self.login_instance.item.get(hostids=host['hostid'], tags=[{"tag": "API"}])
 
+                # Iterate through each item attached to the host
+                for item in host_data:
+                    item_val = item['lastvalue']  # Last value of the item
+                    host_dict[item['name']] = round(float(item_val), 2)  # Save the name of the item and it's value in
+                    # the dictionary
+
+                # Save the formatted dictionary
                 group_data.append(host_dict)
 
-            new_api_data.append(sorted(group_data, key=lambda i: i['name']))
+            new_api_data[g['group_name']] = sorted(group_data, key=lambda i: i['name'])  # Sort the group when complete
 
         self.api_data = new_api_data
