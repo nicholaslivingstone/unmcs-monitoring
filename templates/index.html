@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-CS Machines
+    CS Machines
 {% endblock %}
 
 
 {% block body %}
-<h1> UNM CS Machines</h1>
+    <h1> UNM CS Machines</h1>
     <h5> This data is updated every 5 minutes </h5>
 
     <script>
@@ -19,10 +19,10 @@ CS Machines
         // Close the dropdown menu if the user clicks outside of it
         window.onclick = function (event) {
             if (!event.target.matches('.dropbtn')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                var i;
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                let i;
                 for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
+                    const openDropdown = dropdowns[i];
                     if (openDropdown.classList.contains('show')) {
                         openDropdown.classList.remove('show');
                     }
@@ -32,7 +32,7 @@ CS Machines
     </script>
 
     <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn" id = "groupDdText">Group</button>
+        <button onclick="myFunction()" class="dropbtn" id="groupDdText">Group</button>
         <div id="groupDropdown" class="dropdown-content">
         </div>
     </div>
@@ -48,40 +48,42 @@ CS Machines
         const hosts = {{ APIData |tojson }};
 
         dropDown = document.getElementById("groupDropdown");
-        Object.keys(hosts).forEach(function(groupName, index){
-            var node = document.createElement('a');
-            var linkText = document.createTextNode(groupName);
+        Object.keys(hosts).forEach(function (groupName, index) {
+            const node = document.createElement('a');
+            const linkText = document.createTextNode(groupName);
             node.appendChild(linkText);
-            node.onclick = function () {setGroup(groupName)};
+            node.onclick = function () {
+                setGroup(groupName)
+            };
             dropDown.appendChild(node);
         });
 
 
-        renderHeatmap(document.getElementById('B146Grid'), 6, 'B146','CPU utilization');
+        renderHeatmap(document.getElementById('B146Grid'), 6, 'B146', 'CPU utilization');
         renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'CPU utilization');
 
-        function setGroup(group){
+        function setGroup(group) {
             document.querySelector("#groupDdText").textContent = group;
         }
 
-        function renderHeatmap(element, gridWidth, groupName, itemName){
+        function renderHeatmap(element, gridWidth, groupName, itemName) {
 
-            groupData = hosts[groupName]
+            const groupData = hosts[groupName];
             const gridHeight = Math.ceil(groupData.length / gridWidth);
 
-            var i = 0, zValues = [];
+            let i, zValues = [];
             const item_data = groupData.map((h) => h[itemName])
-            for(i = 0; i < gridHeight; i++){
-                zValues.push(item_data.splice(0,gridWidth));
+            for (i = 0; i < gridHeight; i++) {
+                zValues.push(item_data.splice(0, gridWidth));
             }
 
-            var colorscaleValue = [
+            const colorscaleValue = [
                 ['0.0', '#08a400'],
                 ['0.2', '#ffd500'],
                 ['1', '#ff0000']
             ];
 
-            var data = [{
+            const data = [{
                 z: zValues,
                 type: 'heatmap',
                 colorscale: colorscaleValue,
@@ -91,16 +93,16 @@ CS Machines
                 zmax: 100
             }];
 
-            var layout = {
+            const layout = {
                 title: groupName + ' CPU Utilization',
                 annotations: [],
-                xaxis:{
+                xaxis: {
                     'range': [-0.5, gridWidth - 0.5],
                     'showgrid': false,
                     'zeroline': false,
                     'visible': false
                 },
-                yaxis:{
+                yaxis: {
                     'range': [-0.5, gridHeight - 0.5],
                     'showgrid': false,
                     'zeroline': false,
@@ -109,23 +111,23 @@ CS Machines
             };
 
 
-            for (var i = 0; i < gridWidth; i++) {
-                for (var j = 0; j < gridHeight; j++) {
+            for (i = 0; i < gridWidth; i++) {
+                for (let j = 0; j < gridHeight; j++) {
 
-                    var ann_text = ""
+                    let ann_text = "";
 
-                    if(j * gridWidth + i < groupData.length){
+                    if (j * gridWidth + i < groupData.length) {
                         ann_text = "<b>" + groupData[j * gridWidth + i].name + "</b><br>" + groupData[j * gridWidth + i][itemName] + "%";
                     }
 
-                    var result = {
+                    const result = {
                         x: i,
                         y: j,
                         text: ann_text,
                         font: {
                             family: 'Arial',
                             size: 12,
-                            color:'white'
+                            color: 'white'
                         },
 
                         showarrow: false,
