@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
 CS Machines
 {% endblock %}
@@ -14,7 +13,7 @@ CS Machines
         /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
         function myFunction() {
-            document.getElementById("groupDdcontent").classList.toggle("show");
+            document.getElementById("groupDropdown").classList.toggle("show");
         }
 
         // Close the dropdown menu if the user clicks outside of it
@@ -33,8 +32,8 @@ CS Machines
     </script>
 
     <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn" id="groupDropdown">Dropdown</button>
-        <div id="groupDdcontent" class="dropdown-content">
+        <button onclick="myFunction()" class="dropbtn" id = "groupDdText">Group</button>
+        <div id="groupDropdown" class="dropdown-content">
         </div>
     </div>
 
@@ -48,7 +47,7 @@ CS Machines
     <script>
         const hosts = {{ APIData |tojson }};
 
-        dropDown = document.getElementById("groupDdcontent");
+        dropDown = document.getElementById("groupDropdown");
         Object.keys(hosts).forEach(function(groupName, index){
             var node = document.createElement('a');
             var linkText = document.createTextNode(groupName);
@@ -62,7 +61,7 @@ CS Machines
         renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'CPU utilization');
 
         function setGroup(group){
-            document.querySelector("#groupDropdown").textContent = group;
+            document.querySelector("#groupDdText").textContent = group;
         }
 
         function renderHeatmap(element, gridWidth, groupName, itemName){
