@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    CS Machines
+{% endblock %}
+
+
+{% block body %}
+    <h1> UNM CS Machines</h1>
+    <h5> This data is updated every 5 minutes </h5>
+
+    <script>
+        /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("groupDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                let i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
+    <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn" id="groupDdText">Group</button>
+        <div id="groupDropdown" class="dropdown-content">
+        </div>
+    </div>
+
+    <div class="flex-container">
+        <div id="B146Grid" style="width: 1000px;height:1200px;"></div>
+        <div id="FE2065Grid" style="width: 1000px;height:1000px;"></div>
+    </div>
+
+
+
+    <script>
+        const hosts = {{ APIData |tojson }};
+
+        dropDown = document.getElementById("groupDropdown");
+        Object.keys(hosts).forEach(function (groupName, index) {
+            const node = document.createElement('a');
+            const linkText = document.createTextNode(groupName);
+            node.appendChild(linkText);
+            node.onclick = function () {
+                setGroup(groupName)
+            };
+            dropDown.appendChild(node);
+        });
+
+
+        renderHeatmap(document.getElementById('B146Grid'), 6, 'B146', 'CPU utilization');
+        renderHeatmap(document.getElementById('FE2065Grid'), 5, 'FE2065', 'CPU utilization');
+
+        function setGroup(group) {
+            document.querySelector("#groupDdText").textContent = group;
+        }
+
+        function renderHeatmap(element, gridWidth, groupName, itemName) {
+
+            const groupData = hosts[groupName];
+            const gridHeight = Math.ceil(groupData.length / gridWidth);
+
+            let i, zValues = [];
+            const item_data = groupData.map((h) => h[itemName])
+            for (i = 0; i < gridHeight; i++) {
+                zValues.push(item_data.splice(0, gridWidth));
+            }
+
+            const colorscaleValue = [
+                ['0.0', '#08a400'],
+                ['0.2', '#ffd500'],
+                ['1', '#ff0000']
+            ];
+
+            const data = [{
+                z: zValues,
+                type: 'heatmap',
+                colorscale: colorscaleValue,
+                showscale: false,
+                hoverongaps: false,
+                zmin: 0.0,
+                zmax: 100
+            }];
+
+            const layout = {
+                title: groupName + ' CPU Utilization',
+                annotations: [],
+                xaxis: {
+                    'range': [-0.5, gridWidth - 0.5],
+                    'showgrid': false,
+                    'zeroline': false,
+                    'visible': false
+                },
+                yaxis: {
+                    'range': [-0.5, gridHeight - 0.5],
+                    'showgrid': false,
+                    'zeroline': false,
+                    'visible': false
+                }
+            };
+
+
+            for (i = 0; i < gridWidth; i++) {
+                for (let j = 0; j < gridHeight; j++) {
+
+                    let ann_text = "";
+
+                    if (j * gridWidth + i < groupData.length) {
+                        ann_text = "<b>" + groupData[j * gridWidth + i].name + "</b><br>" + groupData[j * gridWidth + i][itemName] + "%";
+                    }
+
+                    const result = {
+                        x: i,
+                        y: j,
+                        text: ann_text,
+                        font: {
+                            family: 'Arial',
+                            size: 12,
+                            color: 'white'
+                        },
+
+                        showarrow: false,
+
+                    };
+                    layout.annotations.push(result);
+                }
+            }
+
+            Plotly.newPlot(element, data, layout, {staticPlot: true});
+        }
+
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+{% endblock %}
