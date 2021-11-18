@@ -17,24 +17,22 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container col-lg-10">
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <span class="fs-4">UNM CS Machines</span>
-      </a>
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <span class="fs-4">UNM CS Machines</span>
+        </a>
 
-      <ul class="nav nav-pills" id="header">
+        <ul class="nav nav-pills" id="header">
 
-      </ul>
+        </ul>
     </header>
-  </div>
 
-<div class="container-fluid">
-    <div class="row">
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-12 ml-3 mt-3">
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane show fade active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <div class="card shadow-lg" >
+                    <div class="card shadow-lg">
                         <div class="card-body">
                             <h5 class="card-title text-center">CPU Util</h5>
                             <div id="plotly_div"></div>
@@ -44,9 +42,14 @@
                 <div class="col-12 col-md-6">.col-6 .col-md-4</div>
                 <div class="col-12 col-md-6">.col-6 .col-md-4</div>
             </div>
-        </main>
+
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">...</div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
     </div>
+
 </div>
+
 
 <script>
         const hosts = {{ APIData |tojson }};
