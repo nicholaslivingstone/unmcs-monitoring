@@ -44,7 +44,7 @@
                     <div class="card shadow-lg" >
                         <div class="card-body">
                             <h5 class="card-title text-center">CPU Util</h5>
-                            <div class="container" id="test"></div>
+                            <div id="plotly_div"></div>
                         </div>
                     </div>
                 </div>
@@ -107,8 +107,7 @@
             const layout = {
                 //title: groupName + ' CPU Utilization',
                 annotations: [],
-                height: 700,
-                width: 700,
+                autosize: true,
                 margin: {
                     l: 0,
                     r: 0,
@@ -157,7 +156,7 @@
                 }
             }
 
-            Plotly.newPlot(element, data, layout, {staticPlot: true});
+            Plotly.newPlot('plotly_div', data, layout, {staticPlot: true, responsive: true});
         }
 </script>
 
