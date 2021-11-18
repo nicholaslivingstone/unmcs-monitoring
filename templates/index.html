@@ -17,27 +17,20 @@
 </head>
 <body>
 
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">UNM CS Machines Monitoring </a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <span class="fs-4">UNM CS Machines</span>
+      </a>
 
-</header>
+      <ul class="nav nav-pills" id="header">
+
+      </ul>
+    </header>
+  </div>
+
 <div class="container-fluid">
     <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-            <div class="position-sticky pt-3">
-                <h2 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Groups</span>
-                </h2>
-                <ul class="nav flex-column" id="sidebar">
-                </ul>
-            </div>
-        </nav>
-
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-12 ml-3 mt-3">
             <div class="row">
                 <div class="col-12 col-md-6">
@@ -59,16 +52,22 @@
         const hosts = {{ APIData |tojson }};
 
         <!-- Load sidebar with groups -->
-        dropDown = document.getElementById("sidebar");
+        dropDown = document.getElementById("header");
         Object.keys(hosts).forEach(function (groupName, index) {
             const node = document.createElement('li');
             node.className = "nav-item";
-            const link = document.createElement('a');
-            link.className = "nav-link fs-3";
-            link.href = "#";
+            const buttonElement = document.createElement('button');
+            buttonElement.className = "nav-link";
+            buttonElement.id = "pills-".concat(groupName);
+            buttonElement.setAttribute("data-bs-toggle", "pill");
+            buttonElement.setAttribute("data-bs-target", "#pills-".concat(groupName));
+            buttonElement.type = "button";
+            buttonElement.setAttribute("role", "tab");
+            buttonElement.setAttribute("aria-controls", "pills-".concat(groupName));
+            buttonElement.setAttribute("aria-selected", "false");
             const linkText = document.createTextNode(groupName);
-            link.appendChild(linkText);
-            node.appendChild(link);
+            buttonElement.appendChild(linkText);
+            node.appendChild(buttonElement);
             //node.onclick = function () {
               //  setGroup(groupName)
             //};
