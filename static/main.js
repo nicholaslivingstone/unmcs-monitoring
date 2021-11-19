@@ -79,7 +79,7 @@ function renderHeatmap(element, gridWidth, groupName, itemName) {
         }
     }
 
-    Plotly.newPlot('plotly_div', data, layout, {staticPlot: true, responsive: true});
+    Plotly.newPlot(element, data, layout, {staticPlot: true, responsive: true});
 }
 
 function fillHeader(id, hosts) {
@@ -110,4 +110,43 @@ function createPill(groupName){
         node.appendChild(buttonElement);
 
         return node;
+}
+
+/**
+ * Creates a bootstrap card containing the heatmap of a given zabbix item of a group.
+ * @param parentID Parent ID of where the card should be placed
+ * @param gridWidth Width of the heatmap grid
+ * @param groupName Group to display
+ * @param itemName  Name of the zabbix item to show
+ * @param cardTitle Title to show on the card
+ */
+function createCard(parentID, gridWidth, groupName, itemName, cardTitle) {
+
+    // Create the components of the card
+    // Card container
+    let cardContainer = document.createElement('div');
+    cardContainer.className = "col-12 col-md-6";
+    document.getElementById(parentID).appendChild(cardContainer); // add the created card to parent
+
+    // Card
+    let card = document.createElement('div');
+    card.className = "card shadow-lg";
+    cardContainer.appendChild(card);
+
+    // Card body
+    let cardBody = document.createElement('div');
+    cardBody.className = "card-body";
+    card.appendChild(cardBody);
+
+    // Card title
+    let cardTitleElement = document.createElement('h5');
+    cardTitleElement.className = "card-title text-center";
+    cardTitleElement.appendChild(document.createTextNode(cardTitle)); // Set the text of the title
+    cardBody.appendChild(cardTitleElement);
+
+    // Heatmap
+    let heatmap = document.createElement('div');
+    heatmap.id = 'heatmap-' + groupName + '-' + itemName;
+    cardBody.appendChild(heatmap);
+    renderHeatmap(heatmap, gridWidth, groupName, itemName);
 }

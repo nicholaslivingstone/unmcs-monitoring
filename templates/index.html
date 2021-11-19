@@ -31,17 +31,9 @@
 
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane show fade active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">CPU Util</h5>
-                            <div id="plotly_div"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">.col-6 .col-md-4</div>
-                <div class="col-12 col-md-6">.col-6 .col-md-4</div>
+            <div class="row" id="panel1">
+
+
             </div>
 
         </div>
@@ -57,8 +49,7 @@
 
         fillHeader('header', hosts);
 
-        renderHeatmap(document.getElementById('test'), 6, 'B146', 'CPU utilization');
-
+        createCard('panel1', 6, 'B146', 'CPU utilization', 'CPU Utilization');
 
 </script>
 
