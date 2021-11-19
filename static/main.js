@@ -1,5 +1,4 @@
 
-
 function renderHeatmap(element, gridWidth, groupName, itemName) {
 
     const groupData = hosts[groupName];
@@ -82,14 +81,12 @@ function renderHeatmap(element, gridWidth, groupName, itemName) {
     Plotly.newPlot(element, data, layout, {staticPlot: true, responsive: true});
 }
 
-function fillHeader(id, hosts) {
+function setupPage(header, tabContent, hosts) {
 
-    <!-- Load sidebar with groups -->
-    let dropDown = document.getElementById(id);
-    Object.keys(hosts).forEach(function (groupName, index) {
-        
-        let node = createPill(groupName);
-        dropDown.appendChild(node);
+    // Create a pill and tab pane for each group
+    Object.keys(hosts).forEach(function (groupName) {
+        header.appendChild(createPill(groupName));
+        tabContent.appendChild(createTabPane(groupName)); 
     });
 }
 
@@ -98,7 +95,7 @@ function createPill(groupName){
         node.className = "nav-item";
         const buttonElement = document.createElement('button');
         buttonElement.className = "nav-link";
-        buttonElement.id = "pills-".concat(groupName);
+        buttonElement.id = "pills-" + groupName + '-tab';
         buttonElement.setAttribute("data-bs-toggle", "pill");
         buttonElement.setAttribute("data-bs-target", "#pills-".concat(groupName));
         buttonElement.type = "button";
@@ -113,20 +110,40 @@ function createPill(groupName){
 }
 
 /**
+ * Creates a tab pane for a zabbix group and generates relevant cards. 
+ * @param groupName
+ * @returns {HTMLDivElement}
+ */
+function createTabPane(groupName){
+   let tabPane = document.createElement('div');
+   tabPane.className = 'tab-pane fade show';
+   tabPane.id = 'pills-' + groupName; 
+   tabPane.setAttribute('role', 'tabpanel');
+   tabPane.setAttribute('aria-labeledby', 'pills-' + groupName + '-tab');
+   let row = document.createElement('div');
+   row.className = 'row';
+   tabPane.appendChild(row);
+   
+   createCard(row, 6, 'B146', 'CPU utilization', 'CPU Utilization');
+
+   return tabPane;
+}
+
+/**
  * Creates a bootstrap card containing the heatmap of a given zabbix item of a group.
- * @param parentID Parent ID of where the card should be placed
+ * @param parent Parent div of where the card should be placed
  * @param gridWidth Width of the heatmap grid
  * @param groupName Group to display
  * @param itemName  Name of the zabbix item to show
  * @param cardTitle Title to show on the card
  */
-function createCard(parentID, gridWidth, groupName, itemName, cardTitle) {
+function createCard(parent, gridWidth, groupName, itemName, cardTitle) {
 
     // Create the components of the card
     // Card container
     let cardContainer = document.createElement('div');
     cardContainer.className = "col-12 col-md-6";
-    document.getElementById(parentID).appendChild(cardContainer); // add the created card to parent
+    parent.appendChild(cardContainer); // add the created card to parent
 
     // Card
     let card = document.createElement('div');
