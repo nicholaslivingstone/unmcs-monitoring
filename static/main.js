@@ -167,3 +167,11 @@ function createCard(parent, gridWidth, groupName, itemName, cardTitle) {
     cardBody.appendChild(heatmap);
     renderHeatmap(heatmap, gridWidth, groupName, itemName);
 }
+
+/**
+ * Resizes all heatmaps on the page
+ */
+function resizeHeatmaps() {
+    document.querySelectorAll('[id^="heatmap-"]').forEach(
+        element => Plotly.relayout(element, {autosize: true}));
+}
