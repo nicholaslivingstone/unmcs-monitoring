@@ -1,0 +1,45 @@
+{
+    "items": [
+        {
+            "name": "CPU Utilization",
+            "key": "system.cpu.util",
+            "stringFormat": "{:.2%}",
+            "zMin": 0,
+            "zMax": 1
+        },
+        {
+            "name": "Memory Utilization",
+            "key": "vm.memory.utilization",
+            "stringFormat": "{:.2%}",
+            "zMin": 0,
+            "zMax": 1
+        },
+        {
+            "name": "Current Logged Users",
+            "key" : "system.users.num",
+            "stringFormat": "{:n}",
+            "zMin": 0,
+            "zMax": 10
+        }
+    ],
+    "groups": [
+        {
+            "name": "B146",
+            "id": "B146_GROUPID",
+            "items": [
+                1,
+                2,
+                3
+            ]
+        },
+        {
+            "name": "FE2065",
+            "id": "FE2065_GROUPID",
+            "items": [
+                1,
+                2,
+                3
+            ]
+        }
+    ]
+}
